@@ -1,7 +1,7 @@
 import { getMe } from '@/service/getMe';
 import { redirect } from 'next/navigation';
 import React from 'react';
-import { headers } from 'next/headers';
+import DashboardSidebar from './_components/dashboard';
 
 export default async function DashboardLayout({
     children,
@@ -10,23 +10,19 @@ export default async function DashboardLayout({
 }) {
     const user = await getMe();
 
-   
     if (!user || !user.success || !user.data) {
         redirect('/login');
     }
 
-    const userRole = user.data.role;
-
-  
-    const headersList = await headers();
-    const referer = headersList.get('referer') || '';
-    const currentUrl = headersList.get('x-invoke-path') || headersList.get('x-url') || '';
-    
-   
-
     return (
-        <div className="min-h-screen bg-background">
-            {children}
+        <div className="h-screen w-screen overflow-hidden text-foreground flex flex-col md:flex-row fixed inset-0 bg-background z-50">
+            {/* Sidebar (Handles Desktop Sidebar and Mobile Drawer cleanly) */}
+            <DashboardSidebar user={user} />
+
+            {/* Main Content Area (Scrollable) */}
+            <main className="flex-1 overflow-y-auto p-4 sm:p-8">
+                {children}
+            </main>
         </div>
     );
 }
