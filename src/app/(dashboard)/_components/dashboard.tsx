@@ -37,7 +37,6 @@ const getNavLinks = (role: string) => {
             return [
                 { name: "Dashboard", href: "/tenantdashboard", icon: LayoutDashboard },
                 { name: "Rentals", href: "/tenantdashboard/rentals", icon: Building },
-                { name: "Payments", href: "/tenantdashboard/payments", icon: FileText },
             ];
         default:
             return [];
