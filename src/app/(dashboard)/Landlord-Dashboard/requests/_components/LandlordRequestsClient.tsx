@@ -1,12 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
 import { updateRentalRequestAction } from "@/app/(dashboard)/_actions/landlordActions";
 
-export default function LandlordRequestsClient({ requests }: { requests: any[] }) {
+export default function LandlordRequestsClient({ requests: initialRequests }: { requests: any[] }) {
   const router = useRouter();
+  const [requests, setRequests] = useState(initialRequests);
 
   const handleAction = async (requestId: string | number, actionType: "approve" | "reject") => {
     const result = await Swal.fire({
@@ -25,6 +27,14 @@ export default function LandlordRequestsClient({ requests }: { requests: any[] }
       formData.set("requestId", String(requestId));
       formData.set("actionType", actionType);
       await updateRentalRequestAction(formData);
+      setRequests((prev) =>
+        prev.map((item) =>
+          (item.id === requestId || item.requestId === requestId)
+            ? { ...item, status: actionType === "approve" ? "APPROVED" : "REJECTED" }
+            : item
+        )
+      );
+
       toast.success(actionType === "approve" ? "Rental request approved." : "Rental request rejected.");
       router.refresh();
     } catch {
@@ -34,32 +44,45 @@ export default function LandlordRequestsClient({ requests }: { requests: any[] }
 
   return (
     <div className="space-y-3">
-      {requests.map((item: any, index: number) => (
-        <div key={item.id || index} className="rounded-lg border border-border p-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="font-medium">{item.tenant?.name || item.tenantName || "Tenant"}</p>
-              <p className="text-sm text-muted-foreground">{item.status || item.requestStatus || "Pending"}</p>
-            </div>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => handleAction(item.id || item.requestId || index, "approve")}
-                className="rounded-lg border border-border px-3 py-1.5 text-sm"
-              >
-                Approve
-              </button>
-              <button
-                type="button"
-                onClick={() => handleAction(item.id || item.requestId || index, "reject")}
-                className="rounded-lg border border-border px-3 py-1.5 text-sm"
-              >
-                Reject
-              </button>
+      {requests.map((item: any, index: number) => {
+        const currentStatus = (item.status || item.requestStatus || "").toUpperCase();
+        const isProcessed = currentStatus === "APPROVED" || currentStatus === "REJECTED";
+
+        return (
+          <div key={item.id || index} className="rounded-lg border border-border p-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="font-medium">{item.tenant?.name || item.tenantName || "Tenant"}</p>
+                <p className="text-sm text-muted-foreground">
+                  Status: <span className="font-semibold">{currentStatus || "Pending"}</span>
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  disabled={isProcessed}
+                  onClick={() => handleAction(item.id || item.requestId || index, "approve")}
+                  className={`rounded-lg border border-border px-3 py-1.5 text-sm ${
+                    isProcessed ? "opacity-50 cursor-not-allowed bg-muted" : "hover:bg-primary/10"
+                  }`}
+                >
+                  Approve
+                </button>
+                <button
+                  type="button"
+                  disabled={isProcessed}
+                  onClick={() => handleAction(item.id || item.requestId || index, "reject")}
+                  className={`rounded-lg border border-border px-3 py-1.5 text-sm ${
+                    isProcessed ? "opacity-50 cursor-not-allowed bg-muted" : "hover:bg-destructive/10"
+                  }`}
+                >
+                  Reject
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

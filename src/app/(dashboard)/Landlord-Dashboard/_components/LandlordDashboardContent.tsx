@@ -22,7 +22,7 @@ function normalizeList(list: any[] | undefined) {
 
 export default function LandlordDashboardContent({ data }: LandlordDashboardContentProps) {
   const properties = normalizeList(data?.properties);
-  const requests = normalizeList(data?.requests);
+  const [requests, setRequests] = useState(() => normalizeList(data?.requests));
   const router = useRouter();
   const [pendingId, setPendingId] = useState<string | null>(null);
 
@@ -38,12 +38,23 @@ export default function LandlordDashboardContent({ data }: LandlordDashboardCont
 
     if (!result.isConfirmed) return;
 
-    setPendingId(String(requestId));
+    const strId = String(requestId);
+    setPendingId(strId);
+    
     try {
       const formData = new FormData();
-      formData.set("requestId", String(requestId));
+      formData.set("requestId", strId);
       formData.set("actionType", actionType);
       await updateRentalRequestAction(formData);
+      const newStatus = actionType === "approve" ? "APPROVED" : "REJECTED";
+      setRequests((prev) =>
+        prev.map((item) =>
+          String(item.id || item.requestId || "") === strId
+            ? { ...item, status: newStatus, requestStatus: newStatus }
+            : item
+        )
+      );
+
       toast.success(actionType === "approve" ? "Rental request approved." : "Rental request rejected.");
       router.refresh();
     } catch (error) {
@@ -58,7 +69,7 @@ export default function LandlordDashboardContent({ data }: LandlordDashboardCont
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <h1 className="text-2xl font-semibold">Landlord Dashboard</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {data?.message || "Manage your properties and rental requests here."}
+            Manage your properties and rental requests here.
         </p>
       </div>
 
@@ -106,34 +117,47 @@ export default function LandlordDashboardContent({ data }: LandlordDashboardCont
             <p className="text-sm text-muted-foreground">No incoming requests.</p>
           ) : (
             <div className="space-y-3">
-              {requests.map((item: any, index: number) => (
-                <div key={item.id || index} className="rounded-lg border border-border p-3">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="font-medium">{item.tenant?.name || item.tenantName || "Tenant"}</p>
-                      <p className="text-sm text-muted-foreground">{item.status || item.requestStatus || "Pending"}</p>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() => handleRequestAction(item.id || item.requestId || index, "approve")}
-                        disabled={pendingId === String(item.id || item.requestId || index)}
-                        className="rounded-lg border border-border px-3 py-1 text-sm"
-                      >
-                        {pendingId === String(item.id || item.requestId || index) ? "Working..." : "Approve"}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleRequestAction(item.id || item.requestId || index, "reject")}
-                        disabled={pendingId === String(item.id || item.requestId || index)}
-                        className="rounded-lg border border-border px-3 py-1 text-sm"
-                      >
-                        {pendingId === String(item.id || item.requestId || index) ? "Working..." : "Reject"}
-                      </button>
+              {requests.map((item: any, index: number) => {
+                const itemId = String(item.id || item.requestId || index);
+                const currentStatus = String(item.status || item.requestStatus || "Pending").toUpperCase();
+                const isProcessed = currentStatus === "APPROVED" || currentStatus === "REJECTED";
+                const isLoading = pendingId === itemId;
+
+                return (
+                  <div key={itemId} className="rounded-lg border border-border p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="font-medium">{item.tenant?.name || item.tenantName || "Tenant"}</p>
+                        <p className="text-sm text-muted-foreground">
+                          Status: <span className="font-semibold">{currentStatus}</span>
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleRequestAction(item.id || item.requestId || index, "approve")}
+                          disabled={isProcessed || isLoading}
+                          className={`rounded-lg border border-border px-3 py-1 text-sm ${
+                            isProcessed ? "opacity-50 cursor-not-allowed bg-muted" : "hover:bg-primary/10"
+                          }`}
+                        >
+                          {isLoading ? "Working..." : "Approve"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleRequestAction(item.id || item.requestId || index, "reject")}
+                          disabled={isProcessed || isLoading}
+                          className={`rounded-lg border border-border px-3 py-1 text-sm ${
+                            isProcessed ? "opacity-50 cursor-not-allowed bg-muted" : "hover:bg-destructive/10"
+                          }`}
+                        >
+                          {isLoading ? "Working..." : "Reject"}
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

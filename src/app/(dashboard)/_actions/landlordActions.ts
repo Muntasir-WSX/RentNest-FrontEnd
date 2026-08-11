@@ -69,15 +69,12 @@ async function tryFetch(paths: string[], init?: RequestInit) {
 
 export async function getLandlordDashboardData() {
   const propertiesResult = await tryFetch([
-    "/api/landlord/properties",
-    "/api/properties/my",
-    "/api/landlord/properties/my",
+    "/api/landlord/properties"
   ]);
+  
 
   const requestsResult = await tryFetch([
-    "/api/landlord/requests",
-    "/api/rentals/landlord",
-    "/api/requests/landlord",
+    "/api/landlord/requests"
   ]);
 
   const properties =
@@ -122,9 +119,7 @@ export async function updateRentalRequestAction(formData: FormData) {
 
   await tryFetch(
     [
-      `/api/landlord/requests/${requestId}`,
-      `/api/rentals/${requestId}/status`,
-      `/api/landlord/requests/${requestId}/update`,
+      `/api/landlord/requests/${requestId}`
     ],
     {
       method: "PATCH",
