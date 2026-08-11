@@ -29,13 +29,10 @@ export async function middleware(request: NextRequest) {
         }
     }
 
-   
-    let newAccessTokenGenerated = false;
     let response = NextResponse.next();
 
     if (!isValidToken && refreshToken) {
         try {
-           
             const refreshResponse = await fetch(`${BACKEND_API_URL}/api/auth/refresh`, {
                 method: "GET",
                 headers: {
@@ -51,10 +48,12 @@ export async function middleware(request: NextRequest) {
                 
                 userRole = decodedNewToken.role;
                 isValidToken = true;
-                newAccessTokenGenerated = true;
+                response = NextResponse.next({
+                    request: {
+                        headers: request.headers,
+                    },
+                });
 
-
-                response = NextResponse.next();
                 response.cookies.set({
                     name: 'accessToken',
                     value: newAccessToken,
@@ -73,11 +72,9 @@ export async function middleware(request: NextRequest) {
     const isExactPublicRoute = PUBLIC_ROUTES.includes(pathname);
     const isPropertyDetailsRoute = pathname.startsWith('/properties/') && pathname !== '/properties';
 
-if (!isValidToken && (isPropertyDetailsRoute || !isExactPublicRoute)) {
-
-    return NextResponse.redirect(new URL('/login', request.url));
-}
-
+    if (!isValidToken && (isPropertyDetailsRoute || !isExactPublicRoute)) {
+        return NextResponse.redirect(new URL('/login', request.url));
+    }
 
     if (isValidToken && AUTH_ROUTES.includes(pathname)) {
         if (userRole === 'TENANT') {
@@ -111,6 +108,6 @@ if (!isValidToken && (isPropertyDetailsRoute || !isExactPublicRoute)) {
 
 export const config = {
     matcher: [
-        '/((?!api|_next/static|_next/image|.*\\.png$).*)',
+        '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
     ],
 };

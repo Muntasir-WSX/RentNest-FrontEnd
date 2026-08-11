@@ -36,7 +36,6 @@ const getNavLinks = (role: string) => {
         case "TENANT":
             return [
                 { name: "Dashboard", href: "/tenantdashboard", icon: LayoutDashboard },
-                { name: "Rentals", href: "/tenantdashboard/rentals", icon: Building },
             ];
         default:
             return [];

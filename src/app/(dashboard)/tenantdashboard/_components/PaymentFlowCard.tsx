@@ -25,16 +25,34 @@ export default function PaymentFlowCard({ rental }: { rental: any }) {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.set("rentalId", rental.id || rental.rentalId || "");
-      formData.set("amount", rental.amount || rental.totalAmount || "0");
-      const payment = await createPaymentAction(formData);
+      
+      
+      const rentalId = rental.id || rental.rentalId || "";
+      const amount = rental.amount || rental.totalAmount || rental.property?.price || "0";
 
-      if (payment.ok && payment.data?.data?.url) {
-        window.location.href = payment.data.data.url;
+      formData.set("rentalRequestId", rentalId);
+      formData.set("amount", String(amount));
+
+      console.log("Sending Payment Payload -> RentalId:", rentalId, "Amount:", amount);
+
+      const payment = await createPaymentAction(formData);
+      console.log("Full Payment Server Response:", payment);
+      console.log("Raw Response Data:", JSON.stringify(payment.data, null, 2));
+      const paymentUrl = 
+       payment?.data?.data?.url || 
+        payment?.data?.url || 
+        payment?.data?.paymentUrl ||
+        payment?.data?.checkoutUrl ||
+        payment?.data?.data?.paymentUrl ||
+        payment?.data?.paymentGatewayUrl;
+
+      if (payment?.ok && paymentUrl) {
+        window.location.href = paymentUrl;
       } else {
-        toast.error(payment.data?.message || "Payment initialization failed.");
+        toast.error(payment?.data?.message || "Payment URL not found in response.");
       }
-    } catch {
+    } catch (err) {
+      console.error("Payment Error:", err);
       toast.error("Unable to start payment right now.");
     } finally {
       setLoading(false);
@@ -53,7 +71,7 @@ export default function PaymentFlowCard({ rental }: { rental: any }) {
           type="button"
           onClick={handlePay}
           disabled={loading}
-          className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground"
+          className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
         >
           {loading ? "Processing..." : "Pay Now"}
         </button>

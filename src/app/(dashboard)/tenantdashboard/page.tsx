@@ -4,16 +4,17 @@ import React from 'react';
 import { getTenantDashboardData } from "../_actions/tenantActions";
 import TenantDashboardContent from "./_components/TenantDashboardContent";
 
-const TenantDashboardPage = async () => {
-    const user = await getMe();
+export default async function TenantDashboardPage() {
+  const data = await getTenantDashboardData();
 
-    if (!user?.success || user.data?.role !== "TENANT") {
-        redirect("/not-found");
-    }
+ 
+  if (!data.success && data.message?.includes("token")) {
+    redirect("/login");
+  }
 
-    const data = await getTenantDashboardData();
-
-    return <TenantDashboardContent data={data} />;
-};
-
-export default TenantDashboardPage;
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <TenantDashboardContent data={data} />
+    </div>
+  );
+}

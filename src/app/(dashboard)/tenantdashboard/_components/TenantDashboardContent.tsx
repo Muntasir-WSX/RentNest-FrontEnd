@@ -1,4 +1,8 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
+import PaymentFlowCard from "./PaymentFlowCard";
+import ReviewModal from "./ReviewModal";
 
 type TenantDashboardContentProps = {
   data: {
@@ -14,7 +18,28 @@ function normalizeList(list: any[] | undefined) {
   return list;
 }
 
+const getStatusBadge = (status: string) => {
+  const normalized = status?.toUpperCase() || "PENDING";
+  switch (normalized) {
+    case "PENDING":
+      return "bg-amber-500/10 text-amber-500 border-amber-500/20";
+    case "APPROVED":
+      return "bg-blue-500/10 text-blue-500 border-blue-500/20";
+    case "REJECTED":
+      return "bg-red-500/10 text-red-500 border-red-500/20";
+    case "ACTIVE":
+      return "bg-emerald-500/10 text-emerald-500 border-emerald-500/20";
+    case "COMPLETED":
+      return "bg-zinc-500/10 text-zinc-400 border-zinc-500/20";
+    default:
+      return "bg-muted text-muted-foreground border-border";
+  }
+};
+
 export default function TenantDashboardContent({ data }: TenantDashboardContentProps) {
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [selectedRental, setSelectedRental] = useState<any>(null);
+
   const rentals = normalizeList(data?.rentals);
   const payments = normalizeList(data?.payments);
 
@@ -28,6 +53,7 @@ export default function TenantDashboardContent({ data }: TenantDashboardContentP
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
+        {/* My Rental Requests */}
         <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold">My Rental Requests</h2>
@@ -38,25 +64,54 @@ export default function TenantDashboardContent({ data }: TenantDashboardContentP
             <p className="text-sm text-muted-foreground">No rental requests found yet.</p>
           ) : (
             <div className="space-y-3">
-              {rentals.map((item: any, index: number) => (
-                <div key={item.id || index} className="rounded-lg border border-border p-3">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="font-medium">{item.property?.title || item.propertyTitle || "Property"}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {item.status || item.requestStatus || "Pending"}
-                      </p>
+              {rentals.map((item: any, index: number) => {
+                const status = item.status || item.requestStatus || "PENDING";
+                const upperStatus = status.toUpperCase();
+
+                return (
+                  <div key={item.id || index} className="rounded-lg border border-border p-4 space-y-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="font-medium text-foreground">
+                          {item.property?.title || item.propertyTitle || "Property"}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          Date: {item.startDate || item.createdAt || "N/A"}
+                        </p>
+                      </div>
+                      <span className={`rounded-full border px-2.5 py-0.5 text-xs font-medium uppercase ${getStatusBadge(status)}`}>
+                        {status}
+                      </span>
                     </div>
-                    <span className="rounded-full bg-muted px-2.5 py-1 text-xs text-foreground">
-                      {item.startDate || item.createdAt || "N/A"}
-                    </span>
+
+                    {upperStatus === "APPROVED" && (
+                      <div className="pt-2 border-t border-border/50">
+                        <PaymentFlowCard rental={item} />
+                      </div>
+                    )}
+
+                    
+                    {(upperStatus === "ACTIVE" || upperStatus === "COMPLETED") && (
+                      <div className="flex justify-end pt-2 border-t border-border/50">
+                        <button
+                          onClick={() => {
+                            setSelectedRental(item);
+                            setIsReviewOpen(true);
+                          }}
+                          className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+                        >
+                          Leave Review
+                        </button>
+                      </div>
+                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
 
+        {/* Payment History */}
         <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold">Payment History</h2>
@@ -67,25 +122,41 @@ export default function TenantDashboardContent({ data }: TenantDashboardContentP
             <p className="text-sm text-muted-foreground">No payment history found yet.</p>
           ) : (
             <div className="space-y-3">
-              {payments.map((item: any, index: number) => (
-                <div key={item.id || index} className="rounded-lg border border-border p-3">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="font-medium">{item.amount || item.totalAmount || "Amount"}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {item.status || item.paymentStatus || "Pending"}
-                      </p>
+              {payments.map((item: any, index: number) => {
+                const status = item.status || item.paymentStatus || "PENDING";
+
+                return (
+                  <div key={item.id || index} className="rounded-lg border border-border p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="font-medium text-foreground">
+                          ${item.amount || item.totalAmount || "0"}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {item.createdAt || item.date || "N/A"}
+                        </p>
+                      </div>
+                      <span className={`rounded-full border px-2.5 py-0.5 text-xs font-medium uppercase ${getStatusBadge(status)}`}>
+                        {status}
+                      </span>
                     </div>
-                    <span className="rounded-full bg-muted px-2.5 py-1 text-xs text-foreground">
-                      {item.createdAt || item.date || "N/A"}
-                    </span>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
       </div>
+
+      {/* Review Modal Component */}
+      <ReviewModal
+        isOpen={isReviewOpen}
+        onClose={() => setIsReviewOpen(false)}
+        rental={selectedRental}
+        onSuccess={() => {
+          window.location.reload(); // সফলভাবে সাবমিট হলে পেজ রিফ্রেশ করে আপডেট দেখাবে
+        }}
+      />
     </div>
   );
 }

@@ -55,7 +55,7 @@ async function tryFetch(paths: string[], init?: RequestInit) {
         return { ok: false, status: res.status, data: parsed };
       }
     } catch {
-      // try next endpoint
+     
     }
   }
 
@@ -67,23 +67,36 @@ async function tryFetch(paths: string[], init?: RequestInit) {
 }
 
 export async function getTenantDashboardData() {
+
   const rentalsResult = await tryFetch([
+    "/api/rentals/my-rentals", 
     "/api/rentals",
     "/api/tenant/rentals",
     "/api/me/rentals",
-    "/api/rentals/my",
   ]);
 
   const paymentsResult = await tryFetch([
+    "/api/payments/my-payments", 
     "/api/payments",
     "/api/tenant/payments",
     "/api/payments/me",
   ]);
 
-  const rentals =
-    rentalsResult.data?.data || rentalsResult.data?.rentals || rentalsResult.data || [];
-  const payments =
-    paymentsResult.data?.data || paymentsResult.data?.payments || paymentsResult.data || [];
+  
+  const extractData = (result: any) => {
+    const raw = result.data;
+    if (!raw) return [];
+    if (Array.isArray(raw)) return raw;
+    if (Array.isArray(raw.data)) return raw.data;
+    if (Array.isArray(raw.rentals)) return raw.rentals;
+    if (Array.isArray(raw.payments)) return raw.payments;
+  
+    if (typeof raw === "object" && raw !== null && (raw.id || raw._id)) return [raw];
+    return [];
+  };
+
+  const rentals = extractData(rentalsResult);
+  const payments = extractData(paymentsResult);
 
   return {
     success: rentalsResult.ok || paymentsResult.ok,

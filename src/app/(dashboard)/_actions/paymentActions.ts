@@ -19,12 +19,12 @@ async function getAuthHeaders() {
 }
 
 export async function createPaymentAction(formData: FormData) {
-  const rentalId = formData.get("rentalId")?.toString() || "";
+  const rentalRequestId = formData.get("rentalRequestId")?.toString() || "";
   const amount = formData.get("amount")?.toString() || "0";
 
   const headers = await getAuthHeaders();
   const payload = {
-    rentalId,
+    rentalRequestId,
     amount: Number(amount) || 0,
   };
 
