@@ -20,7 +20,7 @@ Use the following credentials to test different user roles across the platform:
 | Role | Email | Password |
 | --- | --- | --- |
 | **Admin** | `admin@rentnest.com` | `admin123` |
-| **Landlord** | `landlord@rentnest.com` *(or `jomidar@gmail.com`)* | `landlord123` *(or `123456`)* |
+| **Landlord** | `jomidar@gmail.com` *(or `landlord@rentnest.com` )* | `123456` *(or `landlord123 `)* |
 | **Tenant** | `tenant@rentnest.com` | `tenant123` |
 
 ---
