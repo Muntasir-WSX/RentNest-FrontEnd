@@ -30,7 +30,6 @@ export async function middleware(request: NextRequest) {
     }
 
     let response = NextResponse.next();
-
     if (!isValidToken && refreshToken) {
         try {
             const refreshResponse = await fetch(`${BACKEND_API_URL}/api/auth/refresh`, {
@@ -68,14 +67,6 @@ export async function middleware(request: NextRequest) {
             isValidToken = false;
         }
     }
-
-    const isExactPublicRoute = PUBLIC_ROUTES.includes(pathname);
-    const isPropertyDetailsRoute = pathname.startsWith('/properties/') && pathname !== '/properties';
-
-    if (!isValidToken && (isPropertyDetailsRoute || !isExactPublicRoute)) {
-        return NextResponse.redirect(new URL('/login', request.url));
-    }
-
     if (isValidToken && AUTH_ROUTES.includes(pathname)) {
         if (userRole === 'TENANT') {
             return NextResponse.redirect(new URL('/tenantdashboard', request.url));
@@ -84,13 +75,16 @@ export async function middleware(request: NextRequest) {
         } else if (userRole === 'LANDLORD') {
             return NextResponse.redirect(new URL('/Landlord-Dashboard', request.url));
         }
+        return NextResponse.redirect(new URL('/', request.url));
     }
-
+    if (AUTH_ROUTES.includes(pathname)) {
+        return response;
+    }
     const isPublicRoute = PUBLIC_ROUTES.some((route) => pathname === route || pathname.startsWith(route + '/'));
-    if (!isValidToken && !isPublicRoute) {
+    const isPropertyDetailsRoute = pathname.startsWith('/properties/') && pathname !== '/properties';
+    if (!isValidToken && !isPublicRoute && !isPropertyDetailsRoute) {
         return NextResponse.redirect(new URL('/login', request.url));
     }
-
     if (pathname.startsWith("/admin-dashboard") && userRole !== "ADMIN") {
         return NextResponse.redirect(new URL('/not-found', request.url));
     }
