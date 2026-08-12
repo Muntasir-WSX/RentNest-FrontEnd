@@ -12,7 +12,6 @@ type AdminDashboardContentProps = {
     message?: string;
     users?: any[];
     properties?: any[];
-    rentals?: any[];
   };
 };
 
@@ -24,11 +23,11 @@ function normalizeList(list: any[] | undefined) {
 export default function AdminDashboardContent({ data }: AdminDashboardContentProps) {
   const users = normalizeList(data?.users);
   const properties = normalizeList(data?.properties);
-  const rentals = normalizeList(data?.rentals);
   const router = useRouter();
   const [pendingId, setPendingId] = useState<string | null>(null);
 
-  const handleUserStatus = async (userId: string | number, actionType: "ban" | "unban") => {
+  const handleUserStatus = async (userId: string | number, currentIsBanned: boolean) => {
+    const actionType = currentIsBanned ? "unban" : "ban";
     const result = await Swal.fire({
       title: actionType === "ban" ? "Ban this user?" : "Unban this user?",
       text: actionType === "ban" ? "This will suspend the user account." : "This will restore the user account.",
@@ -64,35 +63,48 @@ export default function AdminDashboardContent({ data }: AdminDashboardContentPro
         </p>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-3">
+      {/* Grid layout দুই কলামে নামিয়ে আনা হলো কারণ rentals বাদ দেওয়া হয়েছে */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Users Section */}
         <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
           <h2 className="mb-4 text-lg font-semibold">Users</h2>
           {users.length === 0 ? (
             <p className="text-sm text-muted-foreground">No users found.</p>
           ) : (
             <div className="space-y-3">
-              {users.map((user: any, index: number) => (
-                <div key={user.id || index} className="rounded-lg border border-border p-3">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="font-medium">{user.name || user.email || "User"}</p>
-                      <p className="text-sm text-muted-foreground">{user.role || "USER"}</p>
+              {users.map((user: any, index: number) => {
+                const userId = user.id || index;
+                const isBanned = Boolean(user.isBanned ?? user.banned);
+                const isPending = pendingId === String(userId);
+
+                return (
+                  <div key={userId} className="rounded-lg border border-border p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="font-medium">{user.name || user.email || "User"}</p>
+                        <p className="text-sm text-muted-foreground">{user.role || "USER"}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleUserStatus(userId, isBanned)}
+                        disabled={isPending}
+                        className={`rounded-lg border border-border px-3 py-1 text-sm transition-colors ${
+                          isBanned 
+                            ? "bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/20" 
+                            : "hover:bg-muted"
+                        }`}
+                      >
+                        {isPending ? "Working..." : isBanned ? "Banned (Unban)" : "Ban"}
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => handleUserStatus(user.id || index, user.banned ? "unban" : "ban")}
-                      disabled={pendingId === String(user.id || index)}
-                      className="rounded-lg border border-border px-3 py-1 text-sm"
-                    >
-                      {pendingId === String(user.id || index) ? "Working..." : user.banned ? "Unban" : "Ban"}
-                    </button>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
 
+        {/* Properties Section */}
         <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
           <h2 className="mb-4 text-lg font-semibold">Properties</h2>
           {properties.length === 0 ? (
@@ -103,22 +115,6 @@ export default function AdminDashboardContent({ data }: AdminDashboardContentPro
                 <div key={item.id || index} className="rounded-lg border border-border p-3">
                   <p className="font-medium">{item.title || item.name || "Property"}</p>
                   <p className="text-sm text-muted-foreground">{item.location || item.city || "Location"}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold">Rentals</h2>
-          {rentals.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No rentals found.</p>
-          ) : (
-            <div className="space-y-3">
-              {rentals.map((item: any, index: number) => (
-                <div key={item.id || index} className="rounded-lg border border-border p-3">
-                  <p className="font-medium">{item.property?.title || item.propertyTitle || "Rental"}</p>
-                  <p className="text-sm text-muted-foreground">{item.status || "Pending"}</p>
                 </div>
               ))}
             </div>

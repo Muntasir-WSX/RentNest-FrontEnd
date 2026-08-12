@@ -70,38 +70,32 @@ async function tryFetch(paths: string[], init?: RequestInit) {
 export async function getAdminDashboardData() {
   const usersResult = await tryFetch(["/api/admin/users", "/api/users"]);
   const propertiesResult = await tryFetch(["/api/admin/properties", "/api/properties"]);
-  const rentalsResult = await tryFetch(["/api/admin/rentals", "/api/rentals"]);
 
   const users = usersResult.data?.data || usersResult.data?.users || usersResult.data || [];
   const properties = propertiesResult.data?.data || propertiesResult.data?.properties || propertiesResult.data || [];
-  const rentals = rentalsResult.data?.data || rentalsResult.data?.rentals || rentalsResult.data || [];
 
   return {
-    success: usersResult.ok || propertiesResult.ok || rentalsResult.ok,
-    message: usersResult.data?.message || propertiesResult.data?.message || rentalsResult.data?.message || "Dashboard data loaded.",
+    success: usersResult.ok || propertiesResult.ok,
+    message: usersResult.data?.message || propertiesResult.data?.message || "Dashboard data loaded.",
     users,
     properties,
-    rentals,
   };
 }
 
 export async function toggleUserStatusAction(formData: FormData) {
   const userId = formData.get("userId")?.toString();
   const actionType = formData.get("actionType")?.toString() || "ban";
+  const isBanned = actionType === "ban";
 
   await tryFetch(
     [
-      `/api/admin/users/${userId}/ban`,
-      `/api/admin/users/${userId}/status`,
       `/api/admin/users/${userId}`,
+      `/api/admin/users/${userId}/status`,
     ],
     {
       method: "PATCH",
       body: JSON.stringify({
-        status: actionType === "ban" ? "BANNED" : "ACTIVE",
-        banned: actionType === "ban",
-        isActive: actionType !== "ban",
-        active: actionType !== "ban",
+        isBanned,
       }),
     }
   );
