@@ -1,9 +1,5 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-
-const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || "rentnest_access_test_secret";
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || "http://localhost:5000";
 
 export async function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
@@ -11,93 +7,55 @@ export async function middleware(request: NextRequest) {
     const AUTH_ROUTES = ['/login', '/register'];
     const PUBLIC_ROUTES = ['/', '/home', '/properties', '/about'];
 
-    let accessToken = request.cookies.get('accessToken')?.value;
+    const accessToken = request.cookies.get('accessToken')?.value;
     const refreshToken = request.cookies.get('refreshToken')?.value;
-
-    let userRole = null;
-    let isValidToken = false;
-
-    if (accessToken) {
-        try {
-            const decoded = jwt.verify(accessToken, ACCESS_SECRET) as JwtPayload;
-            if (decoded && decoded.role) {
-                userRole = decoded.role;
-                isValidToken = true;
-            }
-        } catch (error) {
-            isValidToken = false;
-        }
-    }
-
-    let response = NextResponse.next();
-    if (!isValidToken && refreshToken) {
-        try {
-            const refreshResponse = await fetch(`${BACKEND_API_URL}/api/auth/refresh`, {
-                method: "GET",
-                headers: {
-                    Cookie: `refreshToken=${refreshToken}`,
-                },
-            });
-
-            const result = await refreshResponse.json();
-
-            if (result.success && result.data?.accessToken) {
-                const newAccessToken = result.data.accessToken;
-                const decodedNewToken = jwt.verify(newAccessToken, ACCESS_SECRET) as JwtPayload;
-                
-                userRole = decodedNewToken.role;
-                isValidToken = true;
-                response = NextResponse.next({
-                    request: {
-                        headers: request.headers,
-                    },
-                });
-
-                response.cookies.set({
-                    name: 'accessToken',
-                    value: newAccessToken,
-                    httpOnly: true,
-                    path: '/',
-                    maxAge: 60 * 60 * 24 * 7, 
-                    sameSite: 'lax',
-                });
-            }
-        } catch (err) {
-            console.error("Middleware Token Refresh Failed:", err);
-            isValidToken = false;
-        }
-    }
-    if (isValidToken && AUTH_ROUTES.includes(pathname)) {
-        if (userRole === 'TENANT') {
-            return NextResponse.redirect(new URL('/tenantdashboard', request.url));
-        } else if (userRole === 'ADMIN') {
-            return NextResponse.redirect(new URL('/admin-dashboard', request.url));
-        } else if (userRole === 'LANDLORD') {
-            return NextResponse.redirect(new URL('/Landlord-Dashboard', request.url));
-        }
-        return NextResponse.redirect(new URL('/', request.url));
-    }
     if (AUTH_ROUTES.includes(pathname)) {
-        return response;
+        if (accessToken) {
+            
+            try {
+                const base64Payload = accessToken.split('.')[1];
+                const payload = JSON.parse(Buffer.from(base64Payload, 'base64').toString());
+                const role = payload?.role;
+
+                if (role === 'TENANT') return NextResponse.redirect(new URL('/tenantdashboard', request.url));
+                if (role === 'ADMIN') return NextResponse.redirect(new URL('/admin-dashboard', request.url));
+                if (role === 'LANDLORD') return NextResponse.redirect(new URL('/Landlord-Dashboard', request.url));
+            } catch (e) {
+            }
+        }
+        return NextResponse.next();
     }
     const isPublicRoute = PUBLIC_ROUTES.some((route) => pathname === route || pathname.startsWith(route + '/'));
     const isPropertyDetailsRoute = pathname.startsWith('/properties/') && pathname !== '/properties';
-    if (!isValidToken && !isPublicRoute && !isPropertyDetailsRoute) {
+
+    if (isPublicRoute || isPropertyDetailsRoute) {
+        return NextResponse.next();
+    }
+
+    if (!accessToken && !refreshToken) {
         return NextResponse.redirect(new URL('/login', request.url));
     }
-    if (pathname.startsWith("/admin-dashboard") && userRole !== "ADMIN") {
-        return NextResponse.redirect(new URL('/not-found', request.url));
+    if (accessToken) {
+        try {
+            const base64Payload = accessToken.split('.')[1];
+            const payload = JSON.parse(Buffer.from(base64Payload, 'base64').toString());
+            const userRole = payload?.role;
+
+            if (pathname.startsWith("/admin-dashboard") && userRole !== "ADMIN") {
+                return NextResponse.redirect(new URL('/not-found', request.url));
+            }
+            if (pathname.startsWith("/Landlord-Dashboard") && userRole !== "LANDLORD") {
+                return NextResponse.redirect(new URL('/not-found', request.url));
+            }
+            if (pathname.startsWith("/tenantdashboard") && userRole !== "TENANT") {
+                return NextResponse.redirect(new URL('/not-found', request.url));
+            }
+        } catch (error) {
+            return NextResponse.redirect(new URL('/login', request.url));
+        }
     }
 
-    if (pathname.startsWith("/Landlord-Dashboard") && userRole !== "LANDLORD") {
-        return NextResponse.redirect(new URL('/not-found', request.url));
-    }
-
-    if (pathname.startsWith("/tenantdashboard") && userRole !== "TENANT") {
-        return NextResponse.redirect(new URL('/not-found', request.url));
-    }
-
-    return response;
+    return NextResponse.next();
 }
 
 export const config = {
