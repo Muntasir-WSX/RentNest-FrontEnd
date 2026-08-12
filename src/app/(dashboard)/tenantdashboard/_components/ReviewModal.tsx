@@ -25,6 +25,9 @@ export default function ReviewModal({ isOpen, onClose, rental, onSuccess }: Revi
     try {
       const token = localStorage.getItem("accessToken") || localStorage.getItem("token") || "";
 
+      
+      const targetRentalRequestId = rental?.rentalRequestId || rental?.id || rental?.requestId;
+
       const res = await fetch("http://localhost:5000/api/reviews", {
         method: "POST",
         headers: {
@@ -33,7 +36,7 @@ export default function ReviewModal({ isOpen, onClose, rental, onSuccess }: Revi
         },
         credentials: "include",
         body: JSON.stringify({
-          rentalRequestId: rental.id,
+          rentalRequestId: targetRentalRequestId,
           rating: Number(rating),
           comment,
         }),
@@ -45,7 +48,9 @@ export default function ReviewModal({ isOpen, onClose, rental, onSuccess }: Revi
         onSuccess();
         onClose();
       } else {
-        setErrorMessage(data.message || data.error?.review || "Failed to submit review.");
+       
+        const errorDetail = data.error ? Object.values(data.error).join(", ") : "";
+        setErrorMessage(data.message || errorDetail || "Failed to submit review.");
       }
     } catch (err) {
       console.error(err);
@@ -101,7 +106,7 @@ export default function ReviewModal({ isOpen, onClose, rental, onSuccess }: Revi
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-border px-4 py-2 text-xs font-semibold hover:bg-muted transition-colors"
+            className="rounded-lg border border-border px-4 py-2 text-xs font-semibold hover:bg-muted transition-colors"
             >
               Cancel
             </button>

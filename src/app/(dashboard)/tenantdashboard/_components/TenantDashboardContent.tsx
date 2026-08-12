@@ -66,7 +66,9 @@ export default function TenantDashboardContent({ data }: TenantDashboardContentP
             <div className="space-y-3">
               {rentals.map((item: any, index: number) => {
                 const status = item.status || item.requestStatus || "PENDING";
-                const upperStatus = status.toUpperCase();
+                const upperStatus = status.toUpperCase();      
+                const canReview = upperStatus === "APPROVED" || upperStatus === "COMPLETED";
+                const hasReviewed = Boolean(item.review);
 
                 return (
                   <div key={item.id || index} className="rounded-lg border border-border p-4 space-y-3">
@@ -90,17 +92,21 @@ export default function TenantDashboardContent({ data }: TenantDashboardContentP
                       </div>
                     )}
 
-                    
-                    {(upperStatus === "ACTIVE" || upperStatus === "COMPLETED") && (
+                    {canReview && (
                       <div className="flex justify-end pt-2 border-t border-border/50">
                         <button
+                          disabled={hasReviewed}
                           onClick={() => {
                             setSelectedRental(item);
                             setIsReviewOpen(true);
                           }}
-                          className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+                          className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                            hasReviewed
+                              ? "bg-muted text-muted-foreground cursor-not-allowed opacity-50"
+                              : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                          }`}
                         >
-                          Leave Review
+                          {hasReviewed ? "Already Reviewed" : "Leave Review"}
                         </button>
                       </div>
                     )}
@@ -154,7 +160,7 @@ export default function TenantDashboardContent({ data }: TenantDashboardContentP
         onClose={() => setIsReviewOpen(false)}
         rental={selectedRental}
         onSuccess={() => {
-          window.location.reload(); // সফলভাবে সাবমিট হলে পেজ রিফ্রেশ করে আপডেট দেখাবে
+          window.location.reload(); 
         }}
       />
     </div>
