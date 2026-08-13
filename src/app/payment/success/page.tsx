@@ -13,8 +13,8 @@ function SuccessContent() {
   useEffect(() => {
     if (!sessionId) return;
     const token = localStorage.getItem("accessToken") || localStorage.getItem("token") || "";
-
-    fetch("http://localhost:5000/api/payments/confirm", {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL || "http://localhost:5000";
+    fetch(`${backendUrl}/api/payments/confirm`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
