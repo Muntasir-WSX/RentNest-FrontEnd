@@ -51,7 +51,7 @@ function SuccessContent() {
             href="/tenantdashboard"
             className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
           >
-            Go to Dashboard
+           Please Go to Dashboard
           </Link>
         </div>
       </div>
