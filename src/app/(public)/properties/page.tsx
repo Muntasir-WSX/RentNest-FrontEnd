@@ -198,7 +198,7 @@ export default async function Propertiespage({ searchParams }: Props) {
                       href={`/properties/${property.id}`} 
                       className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
                     >
-                      <span> Property Details </span>
+                      <span> Property Details view </span>
                       <ArrowRight size={14} />
                     </Link>
                   </div>

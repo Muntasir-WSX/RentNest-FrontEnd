@@ -49,9 +49,9 @@ function SuccessContent() {
         <div className="mt-6 flex justify-center gap-3">
           <Link
             href="/tenantdashboard"
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground rounded-2xl"
           >
-           Please Go to Dashboard
+          Go to Dashboard
           </Link>
         </div>
       </div>
