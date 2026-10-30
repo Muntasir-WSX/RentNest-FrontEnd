@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
+import Logo from './logo/logo';
 
 export default function Footer() {
     return (
@@ -12,18 +13,7 @@ export default function Footer() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
                     <div className="lg:col-span-2 space-y-4">
-                        <Link href="/" className="inline-flex flex-col items-start gap-0.5 py-2">
-                            <Image 
-                                src="/assets/logo.png" 
-                                alt="RentNest Logo" 
-                                width={130} 
-                                height={42} 
-                                className="object-contain h-10 w-auto"
-                            />
-                            <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mt-0.5">
-                                Find your nest
-                            </span>
-                        </Link>
+                       <Logo></Logo>
                         <p className="text-muted-foreground text-sm leading-relaxed max-w-sm">
                             RentNest is your trusted platform to discover verified properties, connect directly with trusted landlords, and experience seamless, secure rental management.
                         </p>
