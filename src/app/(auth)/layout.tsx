@@ -1,25 +1,15 @@
-import { Navbar } from '@/components/ui/SharedComponents/navbar';
-import { getMe } from '@/service/getMe';
-import React from 'react'
+import React from 'react';
 
-const AuthLayout = async (
-    {
-        children
-
-    }
-    :
-    {
-        children: React.ReactNode
-    }
-) => {
-   
-  return (
-   <>
-   <div >
-     {children}
-    </div>
-   </>
-  )
+export default function AuthLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-background">
+            <div className="w-full max-w-md p-4">
+                {children}
+            </div>
+        </div>
+    );
 }
-
-export default AuthLayout
