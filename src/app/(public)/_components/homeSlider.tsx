@@ -1,126 +1,102 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Home, ChevronLeft, ChevronRight } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUpRight, ChevronLeft, ChevronRight, Home, Search } from "lucide-react";
 
 const slides = [
-    {
-        id: 1,
-        badge: "Find Your Dream Space",
-        title: "Discover Modern Apartments in Prime Locations",
-        description: "Explore thoroughly verified residential spaces tailored for your comfort, safety, and modern lifestyle.",
-        image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=1600",
-        btnText: "Explore Properties",
-        btnLink: "/properties",
-    },
-    {
-        id: 2,
-        badge: "Trusted Landlords",
-        title: "Hassle-Free Renting & Secure Management",
-        description: "Connect directly with trusted property owners, complete digital agreements, and manage payments with ultimate peace of mind.",
-        image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=1600",
-        btnText: "Learn More",
-        btnLink: "/about",
-    },
-    {
-        id: 3,
-        badge: "Smart Living",
-        title: "Experience Next-Level Urban Neighborhoods",
-        description: "Step into vibrant communities equipped with top-tier amenities, smart security, and exceptional living standards.",
-        image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1600",
-        btnText: "Browse All",
-        btnLink: "/properties",
-    },
+  {
+    id: 1,
+    eyebrow: "Find your next address",
+    title: "A better place to call home.",
+    description: "Browse beautifully kept homes in neighborhoods you will love, with clear pricing and people you can trust.",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=88&w=2200",
+    action: "Explore homes",
+    href: "/properties",
+    location: "Verified listings · Every day",
+  },
+  {
+    id: 2,
+    eyebrow: "Rent with confidence",
+    title: "Good homes. Good people. Less hassle.",
+    description: "From your first search to move-in day, RentMy keeps the entire rental journey simple and human.",
+    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=88&w=2200",
+    action: "How it works",
+    href: "/about",
+    location: "Verified listings · Every day",
+  },
+  {
+    id: 3,
+    eyebrow: "Make room for more",
+    title: "Live somewhere that fits your life.",
+    description: "Discover spaces with character, comfort, and the little details that make a house feel like yours.",
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=88&w=2200",
+    action: "View all properties",
+    href: "/properties",
+    location: "Flexible stays · Real support",
+  },
 ];
 
 export default function HomeSlider() {
-    const [currentIndex, setCurrentIndex] = useState(0);
+  const [current, setCurrent] = useState(0);
+  const slide = slides[current];
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
-        }, 4000);
+  useEffect(() => {
+    const timer = window.setInterval(() => setCurrent((index) => (index + 1) % slides.length), 6500);
+    return () => window.clearInterval(timer);
+  }, []);
 
-        return () => clearInterval(timer);
-    }, []);
+  const move = (direction: 1 | -1) => setCurrent((index) => (index + direction + slides.length) % slides.length);
 
-    const nextSlide = () => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
-    };
+  return (
+    <section className="relative isolate min-h-[680px] overflow-hidden bg-[#10251e] text-white md:min-h-[760px]" aria-label="Featured rental homes">
+      <AnimatePresence initial={false} mode="sync">
+        <motion.div
+          key={slide.id}
+          className="absolute inset-0 -z-20"
+          initial={{ opacity: 0, scale: 1.08 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <img src={slide.image} alt="" className="h-full w-full object-cover" />
+        </motion.div>
+      </AnimatePresence>
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(8,25,20,.9)_0%,rgba(8,25,20,.62)_44%,rgba(8,25,20,.12)_100%)]" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#081912]/80 via-transparent to-[#081912]/20" />
 
-    const prevSlide = () => {
-        setCurrentIndex((prevIndex) => (prevIndex - 1 + slides.length) % slides.length);
-    };
+      <div className="mx-auto flex min-h-[680px] max-w-7xl flex-col justify-end px-5 pb-16 pt-32 sm:px-8 md:min-h-[760px] md:pb-24 lg:px-12">
+        <motion.div
+          key={`content-${slide.id}`}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.15 }}
+          className="max-w-3xl"
+        >
+          <div className="mb-6 flex items-center gap-3 text-sm font-medium text-[#e9c477]">
+            <span className="flex size-9 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md"><Home className="size-4" aria-hidden="true" /></span>
+            <span className="uppercase tracking-[0.22em]">{slide.eyebrow}</span>
+          </div>
+          <h1 className="max-w-3xl font-heading text-5xl leading-[0.98] tracking-[-0.04em] sm:text-6xl md:text-7xl lg:text-[6.7rem]">{slide.title}</h1>
+          <p className="mt-7 max-w-xl text-base leading-7 text-white/75 md:text-lg">{slide.description}</p>
+          <div className="mt-9 flex flex-wrap items-center gap-4">
+            <Link href={slide.href} className="group inline-flex items-center gap-3 rounded-full bg-[#e9c477] px-6 py-3.5 text-sm font-semibold text-[#10251e] transition-transform hover:-translate-y-0.5">
+              {slide.action}<ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+            </Link>
+            <Link href="/properties" className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-3.5 text-sm font-medium backdrop-blur-md transition-colors hover:bg-white/20"><Search className="size-4" aria-hidden="true" /> Find a home</Link>
+          </div>
+        </motion.div>
 
-    return (
-        <div className="relative w-full h-[550px] md:h-[650px] overflow-hidden bg-background">
-            {slides.map((slide, index) => (
-                <div
-                    key={slide.id}
-                    className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                        index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
-                    }`}
-                >
-                    <div className="absolute inset-0 bg-black/60 z-10" />
-                    <img
-                        src={slide.image}
-                        alt={slide.title}
-                        className="absolute inset-0 w-full h-full object-cover object-center transform scale-105 transition-transform duration-1000"
-                    />
-                    <div className="relative z-20 flex flex-col items-center justify-center h-full text-center px-4 max-w-4xl mx-auto space-y-6">
-                        <span className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold tracking-wider text-white bg-primary/80 backdrop-blur-md rounded-full uppercase animate-fade-in">
-                            {/* Sparkles এর পরিবর্তে Home আইকন */}
-                            <Home className="w-3.5 h-3.5" /> {slide.badge}
-                        </span>
-                        <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight drop-shadow-md">
-                            {slide.title}
-                        </h1>
-                        <p className="max-w-2xl text-gray-200 text-sm md:text-base lg:text-lg font-normal drop-shadow">
-                            {slide.description}
-                        </p>
-                        <div className="pt-2">
-                            <Link
-                                href={slide.btnLink}
-                                className="inline-flex items-center gap-2 px-8 py-3.5 text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-xl shadow-lg transition-all transform hover:scale-105"
-                            >
-                                {slide.btnText} <ArrowRight className="w-4 h-4" />
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            ))}
-            
-            {/* লেফট অ্যারো */}
-            <button
-                onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-sm transition-colors"
-                aria-label="Previous Slide"
-            >
-                <ChevronLeft className="w-6 h-6" />
-            </button>
-            
-            {/* রাইট অ্যারো */}
-            <button
-                onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-2.5 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-sm transition-colors"
-                aria-label="Next Slide"
-            >
-                <ChevronRight className="w-6 h-6" />
-            </button>
-
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2">
-                {slides.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => setCurrentIndex(index)}
-                        className={`transition-all duration-300 rounded-full ${
-                            index === currentIndex ? "w-8 h-2.5 bg-primary" : "w-2.5 h-2.5 bg-white/50 hover:bg-white"
-                        }`}
-                        aria-label={`Go to slide ${index + 1}`}
-                    />
-                ))}
-            </div>
+        <div className="mt-14 flex items-end justify-between gap-6 border-t border-white/20 pt-5">
+          <div className="flex items-center gap-4 text-sm text-white/70"><span className="size-2 rounded-full bg-[#e9c477]" />{slide.location}</div>
+          <div className="flex items-center gap-3">
+            <span className="mr-2 hidden text-xs uppercase tracking-[0.2em] text-white/50 sm:inline">0{current + 1} / 0{slides.length}</span>
+            <button onClick={() => move(-1)} className="flex size-11 items-center justify-center rounded-full border border-white/25 bg-white/10 backdrop-blur-md transition-colors hover:bg-white/20" aria-label="Previous slide"><ChevronLeft className="size-5" /></button>
+            <button onClick={() => move(1)} className="flex size-11 items-center justify-center rounded-full border border-white/25 bg-white/10 backdrop-blur-md transition-colors hover:bg-white/20" aria-label="Next slide"><ChevronRight className="size-5" /></button>
+          </div>
         </div>
-    );
+      </div>
+    </section>
+  );
 }

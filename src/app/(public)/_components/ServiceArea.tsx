@@ -1,79 +1,19 @@
-import React from 'react';
-import Link from 'next/link';
-import { MapPin, ArrowRight } from 'lucide-react';
+"use client";
+
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowUpRight, MapPin } from "lucide-react";
 
 const cities = [
-    {
-        id: 1,
-        name: "Dhaka",
-        properties: "150+ Rentals Available",
-        image: "https://static.vecteezy.com/system/resources/previews/028/244/386/large_2x/a-view-of-the-city-skyline-from-a-high-rise-building-in-dhaka-bangladesh-photo.jpg",
-        link: "/properties?city=dhaka",
-    },
-    {
-        id: 2,
-        name: "Chittagong",
-        properties: "90+ Rentals Available",
-        image: "https://thumbs.dreamstime.com/b/aerial-view-chittagong-city-buildings-roads-trees-sunny-day-also-known-as-chattogram-second-largest-391846012.jpg",
-        link: "/properties?city=chittagong",
-    },
-    {
-        id: 3,
-        name: "Sylhet",
-        properties: "60+ Rentals Available",
-        image: "https://c8.alamy.com/comp/3CCC7TM/aerial-view-of-sylhet-city-skyline-bangladesh-with-colourful-buildings-and-modern-high-rises-under-a-hazy-sky-3CCC7TM.jpg",
-        link: "/properties?city=sylhet",
-    },
+  { name: "Dhaka", properties: "150+ rentals", image: "https://static.vecteezy.com/system/resources/previews/028/244/386/large_2x/a-view-of-the-city-skyline-from-a-high-rise-building-in-dhaka-bangladesh-photo.jpg", link: "/properties?city=dhaka" },
+  { name: "Chittagong", properties: "90+ rentals", image: "https://thumbs.dreamstime.com/b/aerial-view-chittagong-city-buildings-roads-trees-sunny-day-also-known-as-chattogram-second-largest-391846012.jpg", link: "/properties?city=chittagong" },
+  { name: "Sylhet", properties: "60+ rentals", image: "https://c8.alamy.com/comp/3CCC7TM/aerial-view-of-sylhet-city-skyline-bangladesh-with-colourful-buildings-and-modern-high-rises-under-a-hazy-sky-3CCC7TM.jpg", link: "/properties?city=sylhet" },
 ];
 
 export default function ServiceArea() {
-    return (
-        <section className="py-20 px-4 bg-muted/30 border-t border-border">
-            <div className="max-w-6xl mx-auto space-y-12">
-                <div className="text-center space-y-3">
-                    <span className="inline-block px-3.5 py-1.5 text-xs font-semibold tracking-wider text-primary bg-primary/10 rounded-full uppercase">
-                        Locations
-                    </span>
-                    <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-                        Our Service Areas
-                    </h2>
-                    <p className="text-muted-foreground text-sm md:text-base max-w-md mx-auto">
-                        Explore verified properties across the major cities of Bangladesh.
-                    </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {cities.map((city) => (
-                        <Link
-                            key={city.id}
-                            href={city.link}
-                            className="group relative h-80 rounded-2xl overflow-hidden shadow-md block border border-border"
-                        >
-                            {/* ব্যাকগ্রাউন্ড ইমেজ ও ডার্ক ওভারলে */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent z-10" />
-                            <img
-                                src={city.image}
-                                alt={city.name}
-                                className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
-                            />
-
-                            {/* সিটির নাম ও ডিটেইলস */}
-                            <div className="absolute bottom-0 inset-x-0 p-6 z-20 flex items-end justify-between">
-                                <div className="space-y-1 text-white">
-                                    <div className="flex items-center gap-1.5 text-primary text-xs font-semibold uppercase tracking-wider">
-                                        <MapPin className="w-3.5 h-3.5" /> Bangladesh
-                                    </div>
-                                    <h3 className="text-2xl font-bold">{city.name}</h3>
-                                    <p className="text-xs text-gray-300">{city.properties}</p>
-                                </div>
-                                <div className="w-10 h-10 rounded-full bg-primary/80 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-primary transition-colors">
-                                    <ArrowRight className="w-5 h-5" />
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
+  return <section id="locations" className="bg-[#173c38] px-5 py-24 text-[#f3f0e9] md:px-10 lg:py-32">
+    <div className="mx-auto max-w-6xl"><div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end"><div><p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d6a45e]">Find your next address</p><h2 className="font-serif text-4xl leading-none tracking-[-0.04em] md:text-5xl">Rooted in the places<br className="hidden md:block" /> people love.</h2></div><p className="max-w-xs text-sm leading-6 text-white/60">Explore growing rental communities across Bangladesh.</p></div>
+      <div className="grid gap-4 md:grid-cols-3">{cities.map((city, index) => <motion.div key={city.name} initial={{ opacity: 0, scale: 0.97 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}><Link href={city.link} className="group relative block h-80 overflow-hidden rounded-[1.75rem] border border-white/10"><img src={city.image} alt={`${city.name} city skyline`} className="absolute inset-0 size-full object-cover transition duration-700 group-hover:scale-105" /><div className="absolute inset-0 bg-gradient-to-t from-[#071f1d] via-[#071f1d]/25 to-transparent" /><div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-6"><div><p className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#d6a45e]"><MapPin className="size-3" /> Bangladesh</p><h3 className="font-serif text-3xl">{city.name}</h3><p className="mt-1 text-sm text-white/60">{city.properties}</p></div><span className="flex size-11 items-center justify-center rounded-full bg-[#f3f0e9] text-[#173c38] transition duration-300 group-hover:bg-[#d6a45e]"><ArrowUpRight className="size-5" /></span></div></Link></motion.div>)}</div>
+    </div>
+  </section>;
 }
