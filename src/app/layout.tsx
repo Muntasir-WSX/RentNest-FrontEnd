@@ -8,7 +8,7 @@ const merriweatherHeading = Merriweather({subsets:['latin'],variable:'--font-hea
 const publicSans = Public_Sans({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
-  title: "RentMy Property",
+  title: "RentNest - Find your nest",
   description: "fastest growing property rental platform",
 };
 

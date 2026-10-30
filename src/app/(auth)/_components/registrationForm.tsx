@@ -32,21 +32,22 @@ export function RegistrationForm() {
     }, [state, router]);
 
     return (
-        <form action={action} className='flex flex-col gap-4 w-full'>
-            <Card className='w-full p-5 space-y-4 border-none shadow-none'>   
+        <form action={action} className='flex w-full flex-col'>
+            <Card className='w-full space-y-4 border-none bg-transparent p-1 shadow-none'>
+                
                 {/* Role Switcher (Tenant / Landlord) */}
-                <div className='space-y-1.5'>
-                    <label className='text-xs font-semibold uppercase tracking-wider text-muted-foreground'>
+                <div className='space-y-1.5 px-1'>
+                    <label className='text-xs font-semibold uppercase tracking-wider text-[#64736d]'>
                         Select Role
                     </label>
-                    <div className='grid grid-cols-2 gap-2 p-1 bg-muted rounded-lg'>
+                    <div className='grid grid-cols-2 gap-2 p-1.5 bg-[#e9eee8] rounded-xl border border-[#d9ded7]'>
                         <button
                             type="button"
                             onClick={() => setSelectedRole('TENANT')}
-                            className={`py-2 text-sm font-medium rounded-md transition-all ${
+                            className={`py-2.5 text-sm font-medium rounded-lg transition-all ${
                                 selectedRole === 'TENANT' 
-                                    ? 'bg-background text-foreground shadow-sm' 
-                                    : 'text-muted-foreground hover:text-foreground'
+                                    ? 'bg-[#18352d] text-white shadow-sm' 
+                                    : 'text-[#64736d] hover:text-[#18352d]'
                             }`}
                         >
                             Tenant
@@ -54,34 +55,81 @@ export function RegistrationForm() {
                         <button
                             type="button"
                             onClick={() => setSelectedRole('LANDLORD')}
-                            className={`py-2 text-sm font-medium rounded-md transition-all ${
+                            className={`py-2.5 text-sm font-medium rounded-lg transition-all ${
                                 selectedRole === 'LANDLORD' 
-                                    ? 'bg-background text-foreground shadow-sm' 
-                                    : 'text-muted-foreground hover:text-foreground'
+                                    ? 'bg-[#18352d] text-white shadow-sm' 
+                                    : 'text-[#64736d] hover:text-[#18352d]'
                             }`}
                         >
                             Landlord
                         </button>
                     </div>
-                    {/* Hidden input to pass role value to server action */}
                     <input type="hidden" name="role" value={selectedRole} />
                 </div>
 
-                <Input name="name" placeholder="Full Name" required />
-                <Input name="email" placeholder="Enter Your Email" type="email" required />
-                <Input name="phone" placeholder="Phone Number" required />
-                <Input name="password" placeholder="Password" type="password" required />
+                <div className="space-y-2 px-1">
+                    <label htmlFor="name" className="block text-sm font-medium text-[#18352d]">Full name</label>
+                    <Input 
+                        id="name" 
+                        name="name" 
+                        placeholder="John Doe" 
+                        required 
+                        className="h-12 rounded-xl border-[#d9ded7] bg-white px-4 text-[#18352d] shadow-none placeholder:text-[#9aa49e] focus-visible:ring-[#18352d] focus-visible:border-[#18352d]" 
+                    />
+                </div>
 
-                <Button type="submit" className="w-full" disabled={pending}>
-                    {pending ? (
-                        <>
-                            <Loader2 size={16} className="animate-spin mr-2" />
-                            Registering...
-                        </>
-                    ) : (
-                        `Register as ${selectedRole}`
-                    )}
-                </Button>
+                <div className="space-y-2 px-1">
+                    <label htmlFor="email" className="block text-sm font-medium text-[#18352d]">Email address</label>
+                    <Input 
+                        id="email" 
+                        name="email" 
+                        placeholder="you@example.com" 
+                        type="email" 
+                        required 
+                        className="h-12 rounded-xl border-[#d9ded7] bg-white px-4 text-[#18352d] shadow-none placeholder:text-[#9aa49e] focus-visible:ring-[#18352d] focus-visible:border-[#18352d]" 
+                    />
+                </div>
+
+                <div className="space-y-2 px-1">
+                    <label htmlFor="phone" className="block text-sm font-medium text-[#18352d]">Phone number</label>
+                    <Input 
+                        id="phone" 
+                        name="phone" 
+                        placeholder="+8801XXXXXXXXX" 
+                        required 
+                        className="h-12 rounded-xl border-[#d9ded7] bg-white px-4 text-[#18352d] shadow-none placeholder:text-[#9aa49e] focus-visible:ring-[#18352d] focus-visible:border-[#18352d]" 
+                    />
+                </div>
+
+                <div className="space-y-2 px-1">
+                    <label htmlFor="password" className="block text-sm font-medium text-[#18352d]">Password</label>
+                    <Input 
+                        id="password" 
+                        name="password" 
+                        placeholder="Create a strong password" 
+                        type="password" 
+                        required 
+                        className="h-12 rounded-xl border-[#d9ded7] bg-white px-4 text-[#18352d] shadow-none placeholder:text-[#9aa49e] focus-visible:ring-[#18352d] focus-visible:border-[#18352d]" 
+                    />
+                </div>
+
+                <div className="px-1 pt-2">
+                    <Button 
+                        type="submit" 
+                        className="h-12 w-full rounded-xl bg-[#18352d] text-sm font-medium text-white shadow-[0_8px_20px_rgba(24,53,45,0.18)] transition-all hover:-translate-y-0.5 hover:bg-[#244b3f]" 
+                        disabled={pending}
+                    >
+                        {pending ? (
+                            <>
+                                <Loader2 size={16} className="animate-spin mr-2" />
+                                Registering...
+                            </>
+                        ) : (
+                            `Register as ${selectedRole}`
+                        )}
+                    </Button>
+                </div>
+
             </Card>
         </form>
     )

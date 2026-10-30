@@ -1,30 +1,64 @@
 import React from 'react'
-
 import Link from 'next/link';
 import { RegistrationForm } from '../_components/registrationForm';
+import Logo from '@/components/ui/SharedComponents/logo/logo';
+
+const heroImage = 'https://res.cloudinary.com/dnk0bvpym/image/upload/v1793379946/landlordTenant4_wubvdy.jpg'
 
 function RegistrationPage() {
   return (
-    <div className='flex min-h-screen items-center justify-center p-4'>
-      <div className='w-full max-w-md space-y-6 rounded-lg bg-background p-8 text-foreground shadow-lg border border-border'>
-        <div className='space-y-2 text-center'>
-          <h1 className='text-4xl font-bold'>Create Account</h1>
-          <p className='text-muted-foreground'>Join RentNest as a Tenant or Landlord to get started.</p>
-        </div>
+    <main className="min-h-screen bg-[#f4f1eb] p-3 text-[#18352d] sm:p-5 lg:p-8 flex items-center justify-center">
+      <div className="mx-auto grid min-h-[calc(100vh-1.5rem)] w-full max-w-7xl overflow-hidden rounded-[2rem] bg-[#fbfaf7] shadow-[0_24px_80px_rgba(24,53,45,0.16)] sm:min-h-[calc(100vh-2.5rem)] md:min-h-[calc(100vh-5rem)] md:grid-cols-[1fr_0.92fr] lg:grid-cols-[1.05fr_0.95fr]">
         
-        {/* Form Container */}
-        <div>
-          <RegistrationForm />
-        </div>
+        {/* Left Hero Section (Identical to Login Page) */}
+        <section
+          aria-label="Rental living"
+          className="relative min-h-[18rem] overflow-hidden bg-[#18352d] bg-cover bg-center p-6 sm:min-h-[24rem] sm:p-10 lg:min-h-full lg:p-12 flex flex-col justify-between"
+          style={{ backgroundImage: `linear-gradient(145deg, rgba(13,38,31,.22), rgba(13,38,31,.8)), url(${heroImage})` }}
+        >
+          <div className="relative z-10 flex h-full flex-col justify-between gap-16 text-white">
+            <div className="flex items-center justify-between">
+              <Logo />
+              <span className="rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.2em] backdrop-blur-md">
+                Find your place
+              </span>
+            </div>
+            <div className="max-w-md">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-[#e4c98b]">A better way to rent</p>
+              <h2 className="max-w-sm text-4xl font-medium leading-[0.98] tracking-[-0.055em] sm:text-5xl lg:text-6xl text-white">
+                Find your next place to call home.
+              </h2>
+              <p className="mt-5 max-w-sm text-sm leading-6 text-white/75 sm:text-base">
+                Create your account and make renting feel simple, clear, and personal.
+              </p>
+            </div>
+          </div>
+        </section>
 
-        <div className='text-center text-sm text-muted-foreground'>
-          Already have an account?{' '}
-          <Link href="/login" className='text-primary font-medium hover:underline'>
-            Login here
-          </Link>
-        </div>
+        {/* Right Form Section - Perfectly Centered & Aligned */}
+        <section className="flex items-center justify-center px-6 py-10 sm:px-12 sm:py-14 lg:px-16 bg-[#fbfaf7]">
+          <div className="w-full max-w-md">
+
+            <div className="mb-8">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-[#aa8442]">Join RentNest</p>
+              <h1 className="text-3xl font-semibold tracking-[-0.05em] sm:text-4xl text-[#18352d]">Create your account</h1>
+              <p className="mt-3 text-sm leading-6 text-[#64736d]">Choose how you want to use RentNest, then start finding or managing your next home.</p>
+            </div>
+
+            <RegistrationForm />
+
+            <div className='text-center text-sm text-[#64736d] pt-6'>
+              Already have an account?{' '}
+              <Link href="/login" className='text-[#18352d] font-semibold hover:underline'>
+                Login here
+              </Link>
+            </div>
+
+          </div>
+        </section>
+
       </div>
-    </div>
+    </main>
   )
 }
 
