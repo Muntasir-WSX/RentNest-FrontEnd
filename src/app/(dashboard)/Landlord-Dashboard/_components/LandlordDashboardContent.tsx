@@ -66,21 +66,21 @@ export default function LandlordDashboardContent({ data }: LandlordDashboardCont
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+      <div className="rounded-[1.5rem] border border-[#122721]/10 bg-[#fbfaf6] p-6 shadow-[0_12px_32px_rgba(18,39,33,.06)]">
         <h1 className="text-2xl font-semibold">Landlord Dashboard</h1>
         <p className="mt-2 text-sm text-muted-foreground">
             Manage your properties and rental requests here.
         </p>
       </div>
 
-      <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+      <div className="rounded-[1.5rem] border border-[#122721]/10 bg-[#fbfaf6] p-6 shadow-[0_12px_32px_rgba(18,39,33,.06)]">
         <h2 className="mb-4 text-lg font-semibold">Create Property</h2>
         <form action={createPropertyAction} className="grid gap-4 md:grid-cols-2">
-          <input name="title" placeholder="Title" className="rounded-lg border border-border bg-background px-3 py-2" required />
-          <input name="location" placeholder="Location" className="rounded-lg border border-border bg-background px-3 py-2" required />
-          <input name="price" type="number" placeholder="Price" className="rounded-lg border border-border bg-background px-3 py-2" required />
-          <input name="category" placeholder="Category" className="rounded-lg border border-border bg-background px-3 py-2" />
-          <textarea name="description" placeholder="Description" className="md:col-span-2 rounded-lg border border-border bg-background px-3 py-2" rows={3} required />
+          <input name="title" placeholder="Title" className="rounded-lg rounded-xl border border-[#122721]/12 bg-white/70 px-3 py-2 text-[#122721] outline-none focus:border-[#c48b42]" required />
+          <input name="location" placeholder="Location" className="rounded-lg rounded-xl border border-[#122721]/12 bg-white/70 px-3 py-2 text-[#122721] outline-none focus:border-[#c48b42]" required />
+          <input name="price" type="number" placeholder="Price" className="rounded-lg rounded-xl border border-[#122721]/12 bg-white/70 px-3 py-2 text-[#122721] outline-none focus:border-[#c48b42]" required />
+          <input name="category" placeholder="Category" className="rounded-lg rounded-xl border border-[#122721]/12 bg-white/70 px-3 py-2 text-[#122721] outline-none focus:border-[#c48b42]" />
+          <textarea name="description" placeholder="Description" className="md:col-span-2 rounded-lg rounded-xl border border-[#122721]/12 bg-white/70 px-3 py-2 text-[#122721] outline-none focus:border-[#c48b42]" rows={3} required />
           <div className="md:col-span-2">
             <button className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
               Create Property
@@ -90,7 +90,7 @@ export default function LandlordDashboardContent({ data }: LandlordDashboardCont
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+        <div className="rounded-[1.5rem] border border-[#122721]/10 bg-[#fbfaf6] p-6 shadow-[0_12px_32px_rgba(18,39,33,.06)]">
           <h2 className="mb-4 text-lg font-semibold">My Properties</h2>
           {properties.length === 0 ? (
             <p className="text-sm text-muted-foreground">No properties found.</p>
@@ -111,7 +111,7 @@ export default function LandlordDashboardContent({ data }: LandlordDashboardCont
           )}
         </div>
 
-        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+        <div className="rounded-[1.5rem] border border-[#122721]/10 bg-[#fbfaf6] p-6 shadow-[0_12px_32px_rgba(18,39,33,.06)]">
           <h2 className="mb-4 text-lg font-semibold">Incoming Requests</h2>
           {requests.length === 0 ? (
             <p className="text-sm text-muted-foreground">No incoming requests.</p>

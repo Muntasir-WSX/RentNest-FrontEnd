@@ -32,7 +32,7 @@ const getStatusBadge = (status: string) => {
     case "COMPLETED":
       return "bg-zinc-500/10 text-zinc-400 border-zinc-500/20";
     default:
-      return "bg-muted text-muted-foreground border-border";
+      return "bg-[#122721]/8 text-[#122721]/60 border-[#122721]/10";
   }
 };
 
@@ -45,7 +45,7 @@ export default function TenantDashboardContent({ data }: TenantDashboardContentP
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+      <div className="rounded-[1.5rem] border border-[#122721]/10 bg-[#fbfaf6] p-6 shadow-[0_12px_32px_rgba(18,39,33,.06)]">
         <h1 className="text-2xl font-semibold">Tenant Dashboard</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {data?.message || "Your rental requests and payments are shown here."}
@@ -54,7 +54,7 @@ export default function TenantDashboardContent({ data }: TenantDashboardContentP
 
       <div className="grid gap-6 xl:grid-cols-2">
         {/* My Rental Requests */}
-        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+        <div className="rounded-[1.5rem] border border-[#122721]/10 bg-[#fbfaf6] p-6 shadow-[0_12px_32px_rgba(18,39,33,.06)]">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold">My Rental Requests</h2>
             <span className="text-sm text-muted-foreground">{rentals.length} item(s)</span>
@@ -118,7 +118,7 @@ export default function TenantDashboardContent({ data }: TenantDashboardContentP
         </div>
 
         {/* Payment History */}
-        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+        <div className="rounded-[1.5rem] border border-[#122721]/10 bg-[#fbfaf6] p-6 shadow-[0_12px_32px_rgba(18,39,33,.06)]">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold">Payment History</h2>
             <span className="text-sm text-muted-foreground">{payments.length} item(s)</span>

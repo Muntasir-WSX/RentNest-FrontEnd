@@ -56,17 +56,15 @@ export default function AdminDashboardContent({ data }: AdminDashboardContentPro
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+      <div className="rounded-[1.5rem] border border-[#122721]/10 bg-[#fbfaf6] p-6 shadow-[0_12px_32px_rgba(18,39,33,.06)]">
         <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {data?.message || "Admin overview and user moderation are shown here."}
         </p>
       </div>
-
-      {/* Grid layout দুই কলামে নামিয়ে আনা হলো কারণ rentals বাদ দেওয়া হয়েছে */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Users Section */}
-        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+        <div className="rounded-[1.5rem] border border-[#122721]/10 bg-[#fbfaf6] p-6 shadow-[0_12px_32px_rgba(18,39,33,.06)]">
           <h2 className="mb-4 text-lg font-semibold">Users</h2>
           {users.length === 0 ? (
             <p className="text-sm text-muted-foreground">No users found.</p>
@@ -105,7 +103,7 @@ export default function AdminDashboardContent({ data }: AdminDashboardContentPro
         </div>
 
         {/* Properties Section */}
-        <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+        <div className="rounded-[1.5rem] border border-[#122721]/10 bg-[#fbfaf6] p-6 shadow-[0_12px_32px_rgba(18,39,33,.06)]">
           <h2 className="mb-4 text-lg font-semibold">Properties</h2>
           {properties.length === 0 ? (
             <p className="text-sm text-muted-foreground">No properties found.</p>

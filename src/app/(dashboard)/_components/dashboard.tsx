@@ -18,6 +18,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import Logo from "@/components/ui/SharedComponents/logo/logo";
 
 const getNavLinks = (role: string) => {
     switch (role) {
@@ -61,22 +62,12 @@ function SidebarInner({
     };
 
     return (
-        <div className="flex flex-col h-full bg-card p-6 space-y-6">
+        <div className="flex h-full flex-col space-y-6 bg-[#122721] p-6 text-[#f5f1e8]">
             {/* Logo and Role Badge */}
             <div className="flex items-center justify-between">
                 <div className="flex flex-col items-start gap-2 px-2">
-                    <Link href="/" onClick={onClose} className="shrink-0 flex items-center py-1">
-                        <Image
-                            src="/assets/logo.png"
-                            alt="RentNest Logo"
-                            width={120}
-                            height={40}
-                            style={{ width: 'auto', height: 'auto' }}
-                            className="object-contain h-8 w-auto"
-                            priority
-                        />
-                    </Link>
-                    <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded font-medium">
+                   <Logo></Logo>
+                    <span className="rounded-full bg-[#d7ad68]/15 px-3 py-1 text-[10px] font-semibold uppercase tracking-[.16em] text-[#d7ad68]">
                         {userRole}
                     </span>
                 </div>
@@ -104,8 +95,8 @@ function SidebarInner({
                             className={cn(
                                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
                                 isActive
-                                    ? "bg-primary text-primary-foreground"
-                                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+? "bg-[#d7ad68] text-[#122721] shadow-lg shadow-black/10"
+                                    : "text-white/65 hover:bg-white/10 hover:text-white"
                             )}
                         >
                             <Icon size={18} />
@@ -116,10 +107,10 @@ function SidebarInner({
             </nav>
 
             {/* Footer / User Profile & Logout */}
-            <div className="pt-4 border-t border-border shrink-0 space-y-2">
+            <div className="shrink-0 space-y-2 border-t border-white/10 pt-4">
                 <div className="px-3 py-2">
-                    <p className="text-sm font-semibold text-foreground truncate">{user.data.name}</p>
-                    <p className="text-xs text-muted-foreground truncate">{user.data.email}</p>
+                    <p className="truncate text-sm font-semibold text-white">{user.data.name}</p>
+                    <p className="truncate text-xs text-white/50">{user.data.email}</p>
                 </div>
                 <button
                     onClick={handleLogout}
@@ -152,18 +143,8 @@ export default function DashboardSidebar({ user }: { user: IUser }) {
             </aside>
 
             {/* Mobile Top Bar */}
-            <header className="sticky top-0 z-20 flex items-center justify-between h-16 px-4 sm:px-8 border-b border-border bg-background/85 backdrop-blur-md md:hidden shrink-0 w-full">
-                <Link href="/" className="flex items-center">
-                    <Image
-                        src="/assets/logo.png"
-                        alt="RentNest Logo"
-                        width={100}
-                        height={35}
-                        style={{ width: 'auto', height: 'auto' }}
-                        className="object-contain h-7 w-auto"
-                        priority
-                    />
-                </Link>
+            <header className="sticky top-0 z-20 flex h-16 w-full shrink-0 items-center justify-between border-b border-[#122721]/10 bg-[#f3f0e9]/90 px-4 backdrop-blur-md sm:px-8 md:hidden">
+                
                 <button
                     onClick={() => setOpen(true)}
                     className="p-2 rounded-lg border border-border bg-card cursor-pointer hover:bg-muted transition-colors flex items-center justify-center"
