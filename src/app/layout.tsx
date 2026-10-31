@@ -22,8 +22,21 @@ export default function RootLayout({
     <html lang="en" className={cn("h-full", "antialiased", "font-sans", publicSans.variable, merriweatherHeading.variable)}>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <SmoothScroll>
-        <Toaster position="bottom-right" />
-        {children}
+       <Toaster 
+          position="bottom-right" 
+          toastOptions={{
+            style: {
+              background: 'var(--card)',
+              color: 'var(--foreground)',
+              border: '1px solid var(--border)',
+            },
+            className: 'shadow-lg rounded-xl',
+          }}
+        />
+
+       <main className="flex-1">
+          {children}
+        </main>
         </SmoothScroll>
       </body>
     </html>

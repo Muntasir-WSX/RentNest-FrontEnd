@@ -39,22 +39,27 @@ export default function Footer() {
       <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(115deg,rgba(8,22,17,.98)_0%,rgba(11,35,28,.9)_48%,rgba(8,22,17,.96)_100%)]" />
 
       <div className="relative mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:px-10 lg:py-20">
-        <div className="mb-14 flex flex-col gap-8 rounded-[2rem] border border-white/15 bg-white/[0.08] p-7 shadow-2xl backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between sm:p-9">
+        
+        {/* Top CTA Banner */}
+        <div className="mb-14 flex flex-col gap-6 rounded-[2rem] border border-white/15 bg-white/[0.08] p-7 shadow-2xl backdrop-blur-xl sm:p-9 md:flex-row md:items-center md:justify-between">
           <div className="max-w-xl">
             <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.28em] text-[#d7ad68]">Your next chapter starts here</p>
             <h2 className="font-serif text-3xl leading-tight sm:text-4xl">Find a place that feels like home.</h2>
           </div>
-          <Link href="/properties" className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#d7ad68] px-6 py-3.5 text-sm font-semibold text-[#10251f] transition-transform hover:-translate-y-0.5 hover:bg-[#e7c47e]">
-            Explore homes <ArrowUpRight data-icon="inline-end" />
-          </Link>
+          <div className="flex items-center">
+            <Link 
+              href="/properties" 
+              className="inline-flex items-center gap-3 rounded-full bg-[#d7ad68] px-6 py-3.5 text-sm font-semibold text-[#10251e] shadow-[0_0_0_4px_rgba(215,173,104,.16),0_12px_30px_rgba(215,173,104,.24)] transition-all hover:-translate-y-0.5 hover:bg-[#e7c47e]"
+            >
+              Explore homes <ArrowUpRight className="size-4" />
+            </Link>
+          </div>
         </div>
 
         <div className="grid gap-12 lg:grid-cols-[1.35fr_1fr_1fr_1.2fr] lg:gap-10">
           <div>
-            <Logo>
-
-            </Logo>
-            <p className="max-w-sm text-sm leading-7 text-white/95">Discover verified rentals, connect with trusted landlords, and move into a space made for your next season.</p>
+            <Logo />
+            <p className="max-w-sm text-sm leading-7 text-white/95 mt-4">Discover verified rentals, connect with trusted landlords, and move into a space made for your next season.</p>
             <div className="mt-6 flex gap-2.5">
               {socials.map(({ label, icon: Icon }) => (
                 <a key={label} href="#" aria-label={label} className="flex size-9 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white/75 transition-colors hover:border-[#d7ad68] hover:bg-[#d7ad68] hover:text-[#10251f]">

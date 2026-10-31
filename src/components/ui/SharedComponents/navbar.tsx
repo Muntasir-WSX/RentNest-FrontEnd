@@ -269,7 +269,7 @@ export function Navbar({ user }: NavbarProps) {
         ) : (
           <Link 
             href="/login" 
-            className="hidden items-center gap-2 rounded-full bg-[#d7ad68] px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-black transition-all hover:-translate-y-0.5 hover:bg-[#ffd889] hover:shadow-lg hover:shadow-[#ffc861]/25 sm:flex"
+            className="hidden items-center gap-2 rounded-full bg-[#d7ad68] px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.1em] text-[#10251e] shadow-[0_0_0_3px_rgba(215,173,104,.15)] transition-all hover:-translate-y-0.5 hover:bg-[#e7c47e] sm:flex"
           >
             <LogIn className="size-3.5" /> Login
           </Link>
