@@ -122,8 +122,6 @@ export function Navbar({ user }: NavbarProps) {
 
   const dropdownLinks = [
     { href: '/about', label: 'About Us' },
-    { href: '/properties/compare', label: 'Compare Properties' },
-    { href: '/favorites', label: 'Wishlist' },
     { href: '/faq', label: 'FAQ' },
     { href: '/blog', label: 'Blog & Tips' },
   ]
