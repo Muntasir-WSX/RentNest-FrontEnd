@@ -62,6 +62,8 @@ export default function AdminDashboardContent({ data }: AdminDashboardContentPro
           {data?.message || "Admin overview and user moderation are shown here."}
         </p>
       </div>
+
+      {/* Grid layout দুই কলামে নামিয়ে আনা হলো কারণ rentals বাদ দেওয়া হয়েছে */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Users Section */}
         <div className="rounded-[1.5rem] border border-[#122721]/10 bg-[#fbfaf6] p-6 shadow-[0_12px_32px_rgba(18,39,33,.06)]">

@@ -14,12 +14,12 @@ export default async function AdminPropertiesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+      <div className="rounded-xl border border-border bg-[#fbfaf6] p-6 shadow-sm">
         <h1 className="text-2xl font-semibold">All Properties</h1>
         <p className="mt-2 text-sm text-muted-foreground">Review and manage listings across the platform.</p>
       </div>
 
-      <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+      <div className="rounded-xl border border-border bg-[#fbfaf6] p-6 shadow-sm">
         {properties.length === 0 ? (
           <p className="text-sm text-muted-foreground">No properties found.</p>
         ) : (
