@@ -14,14 +14,14 @@ export default async function TenantPaymentsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+      <div className="rounded-xl border border-border bg-[#fbfaf6] p-6 shadow-sm">
         <h1 className="text-2xl font-semibold">Payments</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Approved rentals can be paid here through the checkout flow.
         </p>
       </div>
 
-      <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+      <div className="rounded-xl border border-border bg-[#fbfaf6] p-6 shadow-sm">
         {payments.length === 0 ? (
           <p className="text-sm text-muted-foreground">No payment records found yet.</p>
         ) : (
